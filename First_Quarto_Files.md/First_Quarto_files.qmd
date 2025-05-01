@@ -1,0 +1,38 @@
+---
+title: "First_Quarto_File"
+author: "Sayal Neupane"
+format:
+  html:
+    code-fold: true
+    self-contained: true
+  md: default
+---
+
+# Article Reviews
+
+## 1. [How Music Taste Evolved – The Pudding](https://pudding.cool/2017/03/music-history/)
+
+**What’s good:** This article uses interactive line plots to let readers explore decades of Billboard chart data. Visuals are animated and layered, showing genre rise and fall. The experience is very engaging.
+
+**What could be better:** The interactivity is so heavy that on slower computers or mobile, it can lag or become hard to follow.
+
+## 2. [CO₂ and Greenhouse Gas Emissions – Our World in Data](https://ourworldindata.org/co2-and-other-greenhouse-gas-emissions)
+
+**What’s good:** The article uses interactive global maps and line charts. You can filter data by country and timeframe, making it a great exploration tool.
+
+**What could be better:** The large number of filters and options can be overwhelming for first-time users unfamiliar with data analysis.
+
+## 3. ## 2. [33 Cool Charts We Made In 2022 – FiveThirtyEight](https://fivethirtyeight.com/features/best-charts-2022/)
+
+**What’s good:** This article shows a fun collection of charts from different topics like politics, sports, and science. Each chart tells a quick, clear story and uses smart color and layout choices to make the message easy to see.
+
+**What could be better:** Some charts don’t give enough background or source details. A little more explanation would help readers understand the full story behind the data.
+
+
+---
+
+
+Here’s an R chunk for a simple plot:
+
+```{r}
+plot(1:20)
