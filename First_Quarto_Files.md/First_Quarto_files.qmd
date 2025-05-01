@@ -22,7 +22,7 @@ format:
 
 **What could be better:** The large number of filters and options can be overwhelming for first-time users unfamiliar with data analysis.
 
-## 3. ## 2. [33 Cool Charts We Made In 2022 – FiveThirtyEight](https://fivethirtyeight.com/features/best-charts-2022/)
+## 3. [33 Cool Charts We Made In 2022 – FiveThirtyEight](https://fivethirtyeight.com/features/best-charts-2022/)
 
 **What’s good:** This article shows a fun collection of charts from different topics like politics, sports, and science. Each chart tells a quick, clear story and uses smart color and layout choices to make the message easy to see.
 
