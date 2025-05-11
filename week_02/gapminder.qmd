@@ -1,0 +1,55 @@
+---
+title: "Gapminder Faceted Plot"
+format: 
+  html:
+    code-fold: true
+    code-line-numbers: true
+execute:
+  warning: false
+  message: false
+  keep-md: true
+---
+
+```{r fig.width=12, fig.height=5}
+# Load necessary libraries
+library(tidyverse)
+library(gapminder)
+
+# Remove Kuwait from the dataset
+# Kuwait is removed because it has extremely high GDP per capita values
+# that would skew the scale and make visualizing other countries difficult
+gap_filtered <- gapminder %>%
+  filter(country != "Kuwait")
+
+# Create the faceted plot by year
+ggplot(gap_filtered, aes(x = lifeExp, y = gdpPercap, color = continent, size = pop/100000)) +
+  geom_point(alpha = 0.7) +
+  scale_y_continuous(
+    trans = "sqrt",
+    breaks = seq(0, 50000, 10000),
+    labels = scales::label_number()
+  ) +
+  scale_size_continuous(
+    name = "Population (100k)",
+    breaks = c(2500, 5000, 7500, 10000, 12500),
+    range = c(1, 8)
+  ) +
+  scale_color_manual(
+    name = "continent",
+    values = c("Africa" = "#F8766D", "Americas" = "#B79F00", "Asia" = "#00BA38", "Europe" = "#00BFC4", "Oceania" = "#F564E3")
+  ) +
+  facet_wrap(~ year, nrow = 1) +
+  labs(
+    x = "Life Expectancy",
+    y = "GDP Per Capita"
+  ) +
+  theme_bw() +
+  theme(
+    panel.grid.minor = element_line(color = "grey95"),
+    panel.grid.major = element_line(color = "grey90"),
+    strip.background = element_rect(fill = "grey90"),
+    legend.position = "right",
+    axis.text = element_text(size = 8),
+    strip.text = element_text(size = 9)
+  )
+```

@@ -1,0 +1,88 @@
+---
+title: "NYC Flights Analysis"
+author: "Sayal Neupane"
+date: "2025-05-10"
+format: 
+  html:
+    code-fold: true
+    code-line-numbers: true
+execute:
+  warning: false
+  message: false
+  keep-md: true
+---
+
+```{r setup, include=FALSE}
+# Install and load required packages
+if (!requireNamespace("nycflights13", quietly = TRUE)) install.packages("nycflights13")
+library(nycflights13)
+library(tidyverse)
+```
+
+## 1. 75th Percentile of Departure Delays by Airline (Flights Before Noon)
+
+We compute the 75th percentile of departure delays for flights scheduled to depart before noon, grouped by origin airport and carrier.
+
+```{r dep75-percentile}
+# Calculate 75th percentile of departure delays for flights before noon
+dep75 <- flights %>%
+  filter(!is.na(dep_delay), hour < 12) %>%
+  group_by(origin, carrier) %>%
+  summarise(p75 = quantile(dep_delay, 0.75), .groups = "drop")
+
+# Identify carrier with lowest 75th percentile per origin
+best_carriers <- dep75 %>%
+  group_by(origin) %>%
+  slice_min(p75, with_ties = FALSE)
+
+best_carriers
+```
+
+```{r dep75-barplot}
+# Bar chart of 75th percentile by carrier for each origin
+ggplot(dep75, aes(x = carrier, y = p75, fill = carrier)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~ origin) +
+  labs(
+    title = "75th Percentile of Departure Delays by Carrier (Flights Before Noon)",
+    x = "Carrier",
+    y = "75th Percentile Delay (minutes)"
+  ) +
+  theme_minimal()
+```
+
+**Answer:**
+
+- **JFK:** Carrier with lowest 75th percentile of departure delay is **`r best_carriers$p75[best_carriers$origin == 'JFK']`** minutes (carrier **`r best_carriers$carrier[best_carriers$origin == 'JFK']`**).
+- **EWR:** Carrier with lowest 75th percentile is **`r best_carriers$p75[best_carriers$origin == 'EWR']`** minutes (carrier **`r best_carriers$carrier[best_carriers$origin == 'EWR']`**).
+- **LGA:** Carrier with lowest 75th percentile is **`r best_carriers$p75[best_carriers$origin == 'LGA']`** minutes (carrier **`r best_carriers$carrier[best_carriers$origin == 'LGA']`**).
+
+
+## 2. Best Origin to Minimize Late Arrivals with Delta Airlines
+
+We examine arrival delays for Delta Air Lines (`DL`) and show individual flight delays by origin airport, plus the median delay.
+
+```{r delta-arrival-distribution}
+# Filter Delta flights and remove missing arrival delays
+delta <- flights %>%
+  filter(carrier == "DL", !is.na(arr_delay))
+
+# Jitter plot showing individual arrival delays
+ggplot(delta, aes(x = origin, y = arr_delay)) +
+  geom_jitter(alpha = 0.2, width = 0.2) +
+  stat_summary(fun = median, geom = "point", size = 3, color = "red") +
+  labs(
+    title = "Delta Arrival Delays by Origin (Individual Flights)",
+    x = "Origin Airport",
+    y = "Arrival Delay (minutes)",
+    caption = "Red points = median arrival delay"
+  ) +
+  theme_minimal()
+```
+
+**Answer:**
+
+From the distribution of individual arrival delays and the median (red points), the origin airport with the lowest median arrival delay for Delta is **`r delta %>% group_by(origin) %>% summarise(med = median(arr_delay)) %>% slice_min(med) %>% pull(origin)`**, making it the best origin to minimize late arrivals when flying Delta.
+
+
+<!-- Note: You can address the third question (worst destination airport for arrival delays) similarly in another section if needed. -->
