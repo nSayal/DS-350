@@ -15,15 +15,14 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
 ```{r}
-# Load required libraries
 library(gapminder)
 library(tidyverse)
 
-# Remove Kuwait from the data
+
+
 gapminder_filtered <- gapminder %>% 
   filter(country != "Kuwait")
 
-# Create weighted average data by continent and year
 continent_avg <- gapminder_filtered %>%
   group_by(continent, year) %>%
   summarise(
@@ -31,32 +30,24 @@ continent_avg <- gapminder_filtered %>%
     pop = sum(pop)
   )
 
-# Create faceted plot showing GDP per capita over time by continent
 ggplot() +
-  # Add lines for each country
   geom_line(data = gapminder_filtered, 
             aes(x = year, y = gdpPercap, group = country, color = continent),
             size = 0.5, alpha = 0.7) +
   
-  # Add points for each country-year combination
   geom_point(data = gapminder_filtered,
              aes(x = year, y = gdpPercap, size = pop/100000, color = continent),
              alpha = 0.3) +
   
-  # Add the weighted average line (black)
   geom_line(data = continent_avg,
             aes(x = year, y = gdpPercap, group = continent),
             color = "black", size = 1) +
-  
-  # Add the weighted average points (black)
-  geom_point(data = continent_avg,
+    geom_point(data = continent_avg,
              aes(x = year, y = gdpPercap, size = pop/100000),
              color = "black") +
   
-  # Create separate facets for each continent
   facet_wrap(~ continent, ncol = 5) +
   
-  # Set appropriate scales
   scale_size_continuous(name = "Population (100k)", range = c(1, 5), 
                         breaks = c(10000, 20000, 30000)) +
   scale_color_manual(name = "continent",
@@ -66,19 +57,15 @@ ggplot() +
                                "Europe" = "#00BFC4", 
                                "Oceania" = "#F564E3")) +
   
-  # Set y-axis limits to match original
   scale_y_continuous(limits = c(0, 50000)) +
   
-  # Set x-axis breaks
   scale_x_continuous(breaks = seq(1950, 2010, by = 10)) +
   
-  # Set labels
   labs(
     x = "Year",
     y = "GDP per Capita"
   ) +
   
-  # Apply theme_bw as requested and make additional adjustments
   theme_bw() +
   theme(
     legend.position = "right",
